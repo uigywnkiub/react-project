@@ -50,12 +50,12 @@ export default function App() {
       <AuthProvider>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/react-project/" element={<HomePage />} />
-            <Route path="/react-project/news" element={<Quotes />} />
-            <Route path="/react-project/login" element={<LoginPage />} />
-            <Route path="/react-project/games/fight" element={<GamesPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/news" element={<Quotes />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/games/fight" element={<GamesPage />} />
             <Route
-              path="/react-project/profile"
+              path="/profile"
               element={
                 <RequireAuth>
                   <ProfilePage />
@@ -88,8 +88,8 @@ function Layout() {
       <ul className="link-container">
         <li>
           <Link
-            className={location.pathname === '/react-project/' ? 'active' : ''}
-            to="/react-project/"
+            className={location.pathname === '/' ? 'active' : ''}
+            to="/"
           >
             {t('homePage.titleLink')}
           </Link>
@@ -97,9 +97,9 @@ function Layout() {
         <li>
           <Link
             className={
-              location.pathname === '/react-project/news' ? 'active' : ''
+              location.pathname === '/news' ? 'active' : ''
             }
-            to="/react-project/news"
+            to="/news"
           >
             {t('newsPage.titleLink')}
           </Link>
@@ -107,9 +107,9 @@ function Layout() {
         <li>
           <Link
             className={
-              location.pathname === '/react-project/games/fight' ? 'active' : ''
+              location.pathname === '/games/fight' ? 'active' : ''
             }
-            to="/react-project/games/fight"
+            to="/games/fight"
           >
             {t('gamesPage.titleLink')}
           </Link>
@@ -117,9 +117,9 @@ function Layout() {
         <li>
           <Link
             className={
-              location.pathname === '/react-project/profile' ? 'active' : ''
+              location.pathname === '/profile' ? 'active' : ''
             }
-            to="/react-project/profile"
+            to="/profile"
           >
             {t('profilePage.titleLink')}
           </Link>
@@ -199,7 +199,7 @@ function AuthStatus() {
 
     auth.signout(() => {
       artificialDelay()
-      navigate('/react-project/')
+      navigate('/')
     })
   }
 
@@ -250,7 +250,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 
   if (!auth.user && !auth.userPass && !isAuth) {
     return (
-      <Navigate to="/react-project/login" state={{ from: location }} replace />
+      <Navigate to="/login" state={{ from: location }} replace />
     )
   }
 
@@ -275,7 +275,7 @@ function LoginPage() {
     i18n: { language: ln },
   } = useTranslation()
 
-  let from = location.state?.from?.pathname || '/react-project/'
+  let from = location.state?.from?.pathname || '/'
 
   // if need to add many classes, use the case below
   // const className = ['my-input', isLoginValid ? 'isFormValid' : ''].join(' ')
