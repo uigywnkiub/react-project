@@ -1,34 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
+import appSlice from './appSlice'
 
-interface MainState {
-  counter: number
-  isModalOpen: boolean | null
-}
-
-const initialState: MainState = {
-  counter: 0,
-  isModalOpen: !false,
-}
-
-const AppSlice = createSlice({
-  name: 'main',
-  initialState,
-  reducers: {
-    increment: (state: MainState): void => {
-      state.counter += 1
-    },
-    decrement: (state: MainState): void => {
-      state.counter -= 1
-    },
-    updateIsModalValue: (
-      state: MainState,
-      action: { payload: boolean | null }
-    ): void => {
-      state.isModalOpen = action.payload
-    },
+const store = configureStore({
+  reducer: {
+    store: appSlice,
   },
 })
 
-export const { increment, decrement, updateIsModalValue } = AppSlice.actions
+export default store
 
-export default AppSlice.reducer
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

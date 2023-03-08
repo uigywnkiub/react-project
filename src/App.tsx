@@ -9,7 +9,6 @@ import {
   Outlet,
 } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
 import Input from '@mui/material/Input'
 import Button from '@mui/material/Button'
@@ -22,14 +21,12 @@ import SearchEngine from './components/SearchEngine'
 import LanguageSwitcher from './components/LanguageSwitcher'
 import GameFight from './components/GameFight'
 
-import StoreState from './assets/types/StoreState'
+import { useAppSelector } from './hook'
 import { fakeAuthProvider } from './API/auth'
 import { theme } from './assets/theme'
 
 export default function App() {
-  const {
-    main: { isModalOpen: storeIsModalOpen },
-  } = useSelector((state: StoreState) => state)
+  const storeIsModalOpen = useAppSelector((state) => state.store.isModalOpen)
 
   return (
     <div className="auth-container">
@@ -45,7 +42,7 @@ export default function App() {
 
       {storeIsModalOpen && <LanguageSwitcher />}
 
-      <h1>React Project</h1>
+      <h1 style={{ color: '#A5A0FF' }}>React Project</h1>
 
       <AuthProvider>
         <Routes>
@@ -66,13 +63,6 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
-
-      {storeIsModalOpen && (
-        <>
-          <p className="me">Volodymyr Gerun</p>
-          <p className="company">AlterEGO</p>
-        </>
-      )}
     </div>
   )
 }
@@ -87,18 +77,13 @@ function Layout() {
 
       <ul className="link-container">
         <li>
-          <Link
-            className={location.pathname === '/' ? 'active' : ''}
-            to="/"
-          >
+          <Link className={location.pathname === '/' ? 'active' : ''} to="/">
             {t('homePage.titleLink')}
           </Link>
         </li>
         <li>
           <Link
-            className={
-              location.pathname === '/news' ? 'active' : ''
-            }
+            className={location.pathname === '/news' ? 'active' : ''}
             to="/news"
           >
             {t('newsPage.titleLink')}
@@ -106,9 +91,7 @@ function Layout() {
         </li>
         <li>
           <Link
-            className={
-              location.pathname === '/games/fight' ? 'active' : ''
-            }
+            className={location.pathname === '/games/fight' ? 'active' : ''}
             to="/games/fight"
           >
             {t('gamesPage.titleLink')}
@@ -116,9 +99,7 @@ function Layout() {
         </li>
         <li>
           <Link
-            className={
-              location.pathname === '/profile' ? 'active' : ''
-            }
+            className={location.pathname === '/profile' ? 'active' : ''}
             to="/profile"
           >
             {t('profilePage.titleLink')}
@@ -132,8 +113,8 @@ function Layout() {
 }
 
 interface AuthContextType {
-  user: any
-  userPass: any
+  user: string | null
+  userPass: string | null
   signin: (user: string, password: string, callback: VoidFunction) => void
   signout: (callback: VoidFunction) => void
 }
@@ -141,17 +122,13 @@ interface AuthContextType {
 const AuthContext = React.createContext<AuthContextType>(null!)
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  let [user, setUser] = React.useState<any>(null)
-  let [userPass, setUserPass] = React.useState<any>(null)
+  let [user, setUser] = React.useState<string | null>(null)
+  let [userPass, setUserPass] = React.useState<string | null>(null)
 
-  const signin = (
-    newUser: string,
-    newUserPass: string,
-    callback: VoidFunction
-  ) => {
+  const signin = (user: string, userPass: string, callback: VoidFunction) => {
     return fakeAuthProvider.signin(() => {
-      setUser(newUser)
-      setUserPass(newUserPass)
+      setUser(user)
+      setUserPass(userPass)
       callback()
     })
   }
@@ -179,6 +156,8 @@ function AuthStatus() {
     i18n: { language: ln },
   } = useTranslation()
 
+  const auth = useAuth()
+  const navigate = useNavigate()
   const [isAuth, setIsAuth] = React.useState<boolean>(false)
 
   const userLocal = localStorage.getItem('username')
@@ -186,9 +165,6 @@ function AuthStatus() {
   const artificialDelay = () => {
     setTimeout(() => (!isAuth ? setIsAuth(false) : setIsAuth(true)), 0)
   }
-
-  const auth = useAuth()
-  const navigate = useNavigate()
 
   if (!auth.user && !userLocal) {
     return <p>{t('notLogIn')}</p>
@@ -238,20 +214,18 @@ function AuthStatus() {
 }
 
 function RequireAuth({ children }: { children: JSX.Element }) {
+  const location = useLocation()
+  const auth = useAuth()
+
   let isAuth = fakeAuthProvider.isAuthenticated
 
   const userLocal = localStorage.getItem('username')?.toString()
   const userPassLocal = localStorage.getItem('password')?.toString()
 
-  const location = useLocation()
-  const auth = useAuth()
-
   if (userLocal && userPassLocal) isAuth = true
 
   if (!auth.user && !auth.userPass && !isAuth) {
-    return (
-      <Navigate to="/login" state={{ from: location }} replace />
-    )
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   return children
@@ -411,10 +385,10 @@ function HomePage() {
   const { t } = useTranslation()
 
   return (
-    <div className="auth-container">
+    <>
       <h3>{t('homePage.title')}</h3>
       <SearchEngine />
-    </div>
+    </>
   )
 }
 

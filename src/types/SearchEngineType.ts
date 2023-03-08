@@ -1,4 +1,4 @@
-interface SearchEngineData {
+interface SearchEngineType {
   id: number
   username: string
   company: {
@@ -6,4 +6,4 @@ interface SearchEngineData {
   }
 }
 
-export default SearchEngineData
+export default SearchEngineType

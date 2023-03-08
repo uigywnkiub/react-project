@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
@@ -9,8 +8,9 @@ import { BallTriangle } from 'react-loader-spinner'
 import { RiSearchLine, RiCommandFill, RiDeleteBack2Line } from 'react-icons/ri'
 import Highlighter from 'react-highlight-words'
 
-import { updateIsModalValue } from '../store/index'
-import QuotesData from '../assets/types/QuotesState'
+import { useAppDispatch } from '../hook'
+import { updateIsModalValue } from '../store/appSlice'
+import QuotesDataType from '../types/QuotesDataType'
 import { theme } from '../assets/theme'
 
 const sModal = {
@@ -25,7 +25,7 @@ const sModal = {
   outline: 'none',
 }
 
-const URL = 'https://dummyjson.com/quotes?limit='
+const URL: string = 'https://dummyjson.com/quotes?limit='
 
 const Quotes: React.FC = () => {
   const {
@@ -33,10 +33,10 @@ const Quotes: React.FC = () => {
     i18n: { language: ln },
   } = useTranslation()
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
-  const [data, setData] = React.useState<QuotesData[]>([])
-  const [filteredData, setFilteredData] = React.useState<QuotesData[]>([])
+  const [data, setData] = React.useState<QuotesDataType[]>([])
+  const [filteredData, setFilteredData] = React.useState<QuotesDataType[]>([])
   const [isMatchAuthor, setIsMatchAuthor] = React.useState<boolean>(false)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [open, setOpen] = React.useState<boolean>(false)
@@ -255,10 +255,10 @@ const Quotes: React.FC = () => {
       {error && !isLoading && data && <p className="error">{error}</p>}
 
       {page === 0 && (
-        <div style={{ marginTop: '1rem' }}>
+        <>
           <span>{t('newsPage.oops')}</span>
           <p>{t('newsPage.noQuotes')}</p>
-        </div>
+        </>
       )}
 
       {data &&
@@ -278,14 +278,14 @@ const Quotes: React.FC = () => {
                 gap: '0.5rem',
               }}
             >
-              <span style={{ marginRight: '0.5rem' }}>
+              <div>
                 <img
                   src={`https://robohash.org/${`${quote.author}`}.png`}
                   alt={`Robot: ${quote.author}`}
-                  width="100%"
+                  width="60px"
                   height="60px"
                 />
-              </span>
+              </div>
 
               <h2 style={{ color: '#FEBC2E' }}>{quote.author}</h2>
 

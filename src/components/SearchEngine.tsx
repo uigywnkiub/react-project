@@ -1,31 +1,28 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import { FallingLines, MagnifyingGlass } from 'react-loader-spinner'
 
 import Counter from './Counter'
-import StoreState from '../assets/types/StoreState'
-import SearchEngineData from '../assets/types/SearchEngineState'
+import { useAppSelector } from '../hook'
+import SearchEngineType from '../types/SearchEngineType'
 import artificialDelay from '../API/delay'
 import { theme } from '../assets/theme'
 
-const URL = 'https://jsonplaceholder.typicode.com/users'
+const URL: string = 'https://jsonplaceholder.typicode.com/users'
 
 const SearchEngine: React.FC = () => {
-  const {
-    main: { counter: storeCount },
-  } = useSelector((state: StoreState) => state)
-
-  const { t } = useTranslation()
-
-  const [data, setData] = React.useState<SearchEngineData>()
+  const [data, setData] = React.useState<SearchEngineType>()
   const [isCounterMatch, setIsCounterMatch] = React.useState<boolean>(false)
   const [isUserExist, setIsUserExist] = React.useState<boolean>(false)
   const [isLoading, setIsLoading] = React.useState<boolean>(true)
   const [isFulfilled, setIsFulfilled] = React.useState<boolean>(false)
   const [error, setError] = React.useState<string>('')
+
+  const storeCount = useAppSelector((state) => state.store.counter)
+
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     setIsUserExist(false)
