@@ -290,6 +290,14 @@ body {
   text-align: center;
 }
 
+.hint-account-data {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  color: yellowgreen;
+  font-style: italic;
+}
+
 .my-input {
   background-color: #3B3B3B;
   color: white !important;
