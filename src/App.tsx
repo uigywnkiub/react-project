@@ -33,7 +33,7 @@ export default function App() {
       {storeIsModalOpen && (
         <a
           className="github-link"
-          href="https://github.com/kas1qqqq/react-project"
+          href="https://github.com/uigywnkiub/react-project"
           target={"_blank"}
         >
           GitHub
@@ -313,7 +313,9 @@ function LoginPage() {
         {t("profilePage.logInToViewProfilePage")} {from}
       </p>
 
-      {isPassValid && <span className="hint-account-data">{t("hintAccountData")}</span>}
+      {isPassValid && (
+        <span className="hint-account-data">{t("hintAccountData")}</span>
+      )}
 
       <form className="form-container" onSubmit={submitHandler}>
         <ThemeProvider theme={theme}>
